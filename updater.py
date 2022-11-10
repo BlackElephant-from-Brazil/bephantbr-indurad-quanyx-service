@@ -1,2 +1,6 @@
+import git
+
+
 def updater():
-    print("Olá, mundo")
+    g = git.cmd.Git("https://github.com/guisartori/omega-ash.git")
+    g.pull()
