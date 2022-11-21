@@ -1,0 +1,9 @@
+[Unit]
+Description=Start OMEGA-ASH
+After=network.target
+
+[Service]
+ExecStart=python3 /usr/omega-ash/server/serve.py
+
+[Install]
+WantedBy=default.target

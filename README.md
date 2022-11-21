@@ -18,5 +18,23 @@ make
 para rodar o server
 cd server && python serve.py -->
 
-## para fazer o setup
+## Para fazer o setup
 `$ chmod 777 -R ./setup.sh && ./setup.sh`
+
+
+
+
+## Sequencia de comandos para setup o OMEGA-ASH
+Entre como super usuário com o seguinte comando:
+```
+    $ sudo su
+```
+Depois digite a senha do usuário e siga os próximos passos:
+```
+    $ cd /usr
+    $ git clone https://github.com/guisartori/omega-ash.git
+    $ cd omega-ash/setup
+    $ chmod 777 -R ./setup.sh
+    $ ./setup.sh
+
+```
