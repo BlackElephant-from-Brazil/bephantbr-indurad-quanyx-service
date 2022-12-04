@@ -22,7 +22,7 @@ Depois digite a senha do usuário e siga os próximos passos:
 ```
     $ cd /usr
     $ git clone https://github.com/guisartori/omega-ash.git
-    $ cd omega-ash/setup
+    $ cd omega-ash
     $ chmod 777 -R ./setup.sh
     $ ./setup.sh
 ```
