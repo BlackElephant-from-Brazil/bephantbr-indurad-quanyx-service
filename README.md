@@ -1,4 +1,4 @@
-# OMEGA-ASH da empresa INDURAD
+# SERVICE da empresa INDURAD/QUANYX. Fornecido pela empresa BlackElephant do Brasil.
 
 ## Preparando o ambiente
 
@@ -13,7 +13,8 @@ Coloque a senha e aguarde o termino da atualização. Em seguida rode os seguint
     $ sudo apt install python3-pip -y
 ```
 
-## Sequencia de comandos para setup do OMEGA-ASH
+## Sequencia de comandos para setup do SERVICE
+
 Entre como super usuário com o seguinte comando:
 ```
     $ sudo su
@@ -21,18 +22,18 @@ Entre como super usuário com o seguinte comando:
 Depois digite a senha do usuário e siga os próximos passos:
 ```
     $ cd /usr
-    $ git clone https://github.com/guisartori/omega-ash.git
-    $ cd omega-ash
+    $ git clone https://github.com/guisartori/bephantbr-indurad-quanyx-service.git
+    $ cd bephantbr-indurad-quanyx-service
     $ chmod 777 -R ./setup.sh
     $ ./setup.sh
 ```
-Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o OMEGA-ASH estará funcionando normalmente.
+Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SERVICE estará funcionando normalmente.
 ```
     $ reboot
 ``` 
 
-## Acesse o OMEGA-ASH pelo navegador ou pela URL local
-`http://127.0.0.1:5000`
+<!-- ## Acesse o OMEGA-ASH pelo navegador ou pela URL local
+`http://127.0.0.1:5000` -->
 
 <!-- para rodar o cmake:
 
@@ -43,5 +44,3 @@ make
 
 para rodar o server
 cd server && python serve.py -->
-
-
