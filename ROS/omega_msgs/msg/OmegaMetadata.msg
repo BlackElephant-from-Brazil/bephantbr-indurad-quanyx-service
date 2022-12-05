@@ -1,0 +1,17 @@
+int16 rightwidth
+int16 rightheight
+int16 rightwidthrectified
+int16 rightheightrectified
+int16 dispwidth
+int16 dispheight
+float64 focallength
+float64 baseline
+float64 rightopticalcenterx
+float64 rightopticalcentery
+int16 temperature
+int16 fps
+int16 maxexposuretime
+int16 greylevelpercentage
+int16 blockingreadtimeout
+string modeofstreaming
+string serialnumber

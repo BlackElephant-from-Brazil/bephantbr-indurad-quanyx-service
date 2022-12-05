@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>omega_camera</name>
+  <version>0.1.0</version>
+  <description>ROS wrapper for Arcure Omega camera</description>
+
+  <maintainer email="thibaud.vilboux@arcure.net">Thibaud Vilboux</maintainer>
+  <maintainer email="viachaslau.kachurka@arcure.net">Viachaslau Kachurka</maintainer>
+
+  <license>0BSD</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- The <depend> tag is recommended for message dependencies.  -->
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>omega_msgs</build_depend>
+  
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>omega_msgs</build_export_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>omega_msgs</exec_depend>
+
+  <!-- exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend -->
+
+  <export>
+
+  </export>
+</package>

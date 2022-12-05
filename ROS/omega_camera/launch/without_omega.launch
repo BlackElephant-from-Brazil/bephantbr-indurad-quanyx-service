@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- RVIZ-->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find omega_camera)/rviz/omega.rviz" />
+
+    <!-- Static Transforms Publisher -->
+     <node pkg="tf2_ros" type="static_transform_publisher" name="base_link_omega_cam_tf" args="0 0 1 1.5 0 -1.5 base_link omega_cam" />
+
+</launch>

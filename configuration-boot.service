@@ -1,0 +1,9 @@
+[Unit]
+Description=Configure catkin to run ROS
+After=network.target
+
+[Service]
+ExecStart=/usr/bephantbr-indurad-quanyx-service/configuration.sh
+
+[Install]
+WantedBy=default.target

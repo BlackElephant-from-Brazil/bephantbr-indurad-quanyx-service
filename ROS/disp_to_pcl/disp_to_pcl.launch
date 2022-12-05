@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- disp_to_pcl Node -->
+    <arg name="useColorMap" default="false"/>
+    <arg name="filterLevel" default="255"/>
+    <group if="$(arg useColorMap)">
+        <node name="disp_to_pcl" pkg="disp_to_pcl" type="disp_to_pcl_node" args="-c -f $(arg filterLevel)" output="screen">
+        </node>
+    </group>
+    <group unless="$(arg useColorMap)">
+        <node name="disp_to_pcl" pkg="disp_to_pcl" type="disp_to_pcl_node" args="-f $(arg filterLevel)" output="screen">
+        </node>
+    </group>
+    
+ 
+</launch>

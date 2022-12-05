@@ -1,6 +1,0 @@
-# GitPython
-# Flask
-# asyncua
-# asyncio
-# opcua
-OpenOPC-Python3x

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>disp_to_pcl</name>
+  <version>0.0.0</version>
+  <description>The disp_to_pcl package</description>
+  <maintainer email="thibaud.vilboux@arcure.net">Thibaud Vilboux</maintainer>
+
+  <license>0BSD</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- The <depend> tag is recommended for message dependencies.  -->
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>omega_msgs</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>omega_msgs</build_export_depend>
+  
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>omega_msgs</exec_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

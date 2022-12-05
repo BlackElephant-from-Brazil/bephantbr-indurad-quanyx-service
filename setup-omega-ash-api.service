@@ -1,9 +1,0 @@
-[Unit]
-Description=Start OMEGA-ASH API
-After=network.target
-
-[Service]
-ExecStart=python3 /usr/omega-ash/src/infra/http/serve.py
-
-[Install]
-WantedBy=default.target

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!-- Omega Camera Node -->
+    <arg name="camera_name" default="head-T-SY-17-05-005.local"/>
+    <node name="omega_camera_1" pkg="omega_camera" type="omega_camera_node" args="$(arg camera_name)" output="screen" respawn="true">
+    </node>
+ 
+</launch>
