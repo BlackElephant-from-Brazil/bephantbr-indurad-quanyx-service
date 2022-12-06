@@ -1,7 +1,7 @@
 # Stream videos from a given Autonous Sensor Head (ASH)
 # 
 
-project(ASHViewer)
+project(SERVICE)
 cmake_minimum_required(VERSION 2.8)
 
 include(FindPkgConfig)
