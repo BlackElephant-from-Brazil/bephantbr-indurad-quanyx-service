@@ -170,6 +170,7 @@ void parse_cmdline(int argc, char *argv[])
     }
 }
 
+
 bool compareString (std::string a, std::string b) 
 {
     return a > b;
@@ -194,15 +195,13 @@ void deleteLastVideos()
     std::sort(fileNames.begin(),fileNames.end(),compareString);
     if (fileNames.size() >= 4) {
         fileNames.erase(fileNames.begin(), fileNames.begin()+4);
-    }
-    for (string file: fileNames) {
-        char fileToDelete[file.length() + 1];
-	    strcpy(fileToDelete, file.c_str());
-        remove(fileToDelete);
+        for (string file: fileNames) {
+            char fileToDelete[file.length() + 1];
+            strcpy(fileToDelete, file.c_str());
+            remove(fileToDelete);
+        }
     }
 }
-
-
 
 /********************************************************************************
  *  MAIN PROGRAM
