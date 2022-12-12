@@ -1,5 +1,9 @@
 
 #include <iostream>
+
+// ROS 
+#include "ros/ros.h"
+
 // Point Cloud Messages
 #include <sensor_msgs/PointCloud2.h>
 // Point Cloud Library
@@ -7,6 +11,7 @@
 #include <pcl/conversions.h>
 
 using namespace std;
+typedef pcl::PointXYZRGB PointT;
 
 void sendDataViaOPCDA()
 {
