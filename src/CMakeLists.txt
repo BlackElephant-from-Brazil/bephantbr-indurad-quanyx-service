@@ -1,7 +1,7 @@
 # Stream videos from a given Autonous Sensor Head (ASH)
 # 
 
-project(ASHViewer)
+project(SERVICE)
 cmake_minimum_required(VERSION 2.8)
 
 include(FindPkgConfig)
@@ -40,10 +40,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Tell CMake we are creating an executable with those files
-add_executable(ASHViewer main.cpp Viewer.cpp ImageProcessing.cpp SensorControlThread.cpp)
+add_executable(SERVICE main.cpp Viewer.cpp ImageProcessing.cpp SensorControlThread.cpp)
 # And link this executable with the required libraries for AutonomousSensorHead
-target_link_libraries(ASHViewer ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS})
-qt5_use_modules(ASHViewer Core Gui)
+target_link_libraries(SERVICE ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS})
+qt5_use_modules(SERVICE Core Gui)
         
 install(TARGETS ${PROJECT_NAME}
         DESTINATION bin)
