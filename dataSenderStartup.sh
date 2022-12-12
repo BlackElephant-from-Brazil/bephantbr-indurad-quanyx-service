@@ -1,4 +1,4 @@
 cd ~/catkin_ws
 catkin build
 source devel/setup.bash
-roslaunch omega_camera omega.launch
+rosrun pcl_to_clp_data_sender pcl_to_clp_data_sender

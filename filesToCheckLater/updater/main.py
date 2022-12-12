@@ -1,3 +1,0 @@
-from updater import *
-
-updater()
