@@ -1,6 +1,8 @@
 #include <iostream>
+#include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <memory>
 #include <stdio.h>
@@ -12,6 +14,9 @@
 #include <getopt.h>
 #endif
 #include "Viewer.h"
+
+#include <dirent.h>
+
 
 using namespace std;
 
@@ -165,6 +170,40 @@ void parse_cmdline(int argc, char *argv[])
     }
 }
 
+bool compareString (std::string a, std::string b) 
+{
+    return a > b;
+}
+
+void deleteLastVideos()
+{
+    DIR *dr;
+    struct dirent *en;
+    dr = opendir("."); 
+    vector<string> fileNames;
+    if (dr) {
+        while ((en = readdir(dr)) != NULL) {
+            string fileName = en->d_name;
+            if (fileName.find(".avi") != std::string::npos) {
+                fileNames.push_back(fileName);
+            }
+        }
+
+        closedir(dr);
+    }
+    std::sort(fileNames.begin(),fileNames.end(),compareString);
+    if (fileNames.size() >= 4) {
+        fileNames.erase(fileNames.begin(), fileNames.begin()+4);
+    }
+    for (string file: fileNames) {
+        char fileToDelete[file.length() + 1];
+	    strcpy(fileToDelete, file.c_str());
+        remove(fileToDelete);
+    }
+}
+
+
+
 /********************************************************************************
  *  MAIN PROGRAM
  ********************************************************************************/
@@ -173,6 +212,8 @@ int main(int argc, char *argv[])
 {
     /* Get arguments from cmdline */
     parse_cmdline(argc, argv);
+
+    deleteLastVideos();
     
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
@@ -193,4 +234,3 @@ int main(int argc, char *argv[])
 
     return viewer.exec();
 }
-
