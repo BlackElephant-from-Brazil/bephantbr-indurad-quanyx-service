@@ -17,6 +17,9 @@
 
 #include <dirent.h>
 
+#include <IDevice.h>
+#include <IDeviceManager.h>
+
 
 using namespace std;
 
@@ -170,6 +173,16 @@ void parse_cmdline(int argc, char *argv[])
     }
 }
 
+string findFirstASHCamera() 
+{
+    IDeviceManager manager;
+
+    vector<shared_ptr<IDevice>> heads = manager.detectDevices();
+
+    string sensorName = heads[0]->getDeviceInformation()->getName();
+
+    return sensorName;
+}
 
 bool compareString (std::string a, std::string b) 
 {
@@ -213,6 +226,9 @@ int main(int argc, char *argv[])
     parse_cmdline(argc, argv);
 
     deleteLastVideos();
+
+    string hostname = findFirstASHCamera();
+    cout << hostname << endl;
     
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
