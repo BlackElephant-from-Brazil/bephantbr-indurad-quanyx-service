@@ -24,13 +24,18 @@ source devel/setup.bash
 
 # Create configuration boot on ubuntu
 cd /usr/bephantbr-indurad-quanyx-service
-cp ./configuration-boot /etc/systemd/system
+cp ./configuration-boot.service /etc/systemd/system
 systemctl enable configuration-boot
 
 # Create startup boot on ubuntu
 cd /usr/bephantbr-indurad-quanyx-service
-cp ./startup-boot /etc/systemd/system
+cp ./startup-boot.service /etc/systemd/system
 systemctl enable startup-boot
+
+# Create the data sender startup configuration
+cd /usr/bephantbr-indurad-quanyx-service
+cp ./data-sender-startup.service /etc/systemd/system
+systemctl enable data-sender-startup
 
 # Allow any changes in folder (segmentation fault resolution)
 cd /usr

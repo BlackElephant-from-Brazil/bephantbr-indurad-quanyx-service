@@ -1,0 +1,9 @@
+[Unit]
+Description=StartUp the data sender Node
+After=network.target
+
+[Service]
+ExecStart=/usr/bephantbr-indurad-quanyx-service/dataSenderStartup.sh
+
+[Install]
+WantedBy=default.target
