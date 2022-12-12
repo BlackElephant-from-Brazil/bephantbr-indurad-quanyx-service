@@ -75,8 +75,10 @@ Viewer::Viewer(std::string hostname, int& argc, char** argv,
 
     qRegisterMetaType< QImage::Format >("QImage::Format");
     connect(&_sensorControl, SIGNAL(newFrames(const unsigned char*,int,int,QImage::Format,
+                                              const unsigned char*,int,int,QImage::Format,
                                               const unsigned char*,int,int,QImage::Format)),
             this, SLOT(displayFrames(const unsigned char*,int,int,QImage::Format,
+                                     const unsigned char*,int,int,QImage::Format,
                                      const unsigned char*,int,int,QImage::Format)));
 
 
@@ -133,13 +135,21 @@ void Viewer::insertFrameToDisparityVideo(QImage& disparityImage)
 }
 
 void Viewer::displayFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
-                           const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat)
+                           const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat,
+                           const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat)
 {
-
     QImage displayImage(right, rightWidth, rightHeight, rightFormat);
-    QImage disparityImage(disp, dispWidth, dispHeight, dispFormat);
 
+    // Rectified right as background
+    QImage disparityImage(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
+    
+    // Overlay with disparity
+    QPainter painter(&disparityImage);
+    QImage imgDisparity(disp, dispWidth, dispHeight, dispFormat);
+    painter.setOpacity(0.4);
+    painter.drawImage(disparityImage.rect(), imgDisparity);
+    painter.end();
+        
     insertFrameToDisplayVideo(displayImage);
     insertFrameToDisparityVideo(disparityImage);
-    
 }

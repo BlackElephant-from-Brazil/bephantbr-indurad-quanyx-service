@@ -62,7 +62,8 @@ public Q_SLOTS:
      * @param leftRectFormat Format of left rect image
      */
     void displayFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
-                       const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat);
+                       const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat,
+                       const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat);
 
     void leave();
 

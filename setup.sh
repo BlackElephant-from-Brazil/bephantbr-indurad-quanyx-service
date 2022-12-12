@@ -22,13 +22,22 @@ rosdep install --from-paths src --ignore-src -r -y
 catkin build
 source devel/setup.bash
 
-# Create autorun on ubuntu
+# Create configuration boot on ubuntu
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./configuration-boot /etc/systemd/system
 systemctl enable configuration-boot
 
+# Create startup boot on ubuntu
+cd /usr/bephantbr-indurad-quanyx-service
+cp ./startup-boot /etc/systemd/system
+systemctl enable startup-boot
+
+# Allow any changes in folder (segmentation fault resolution)
+cd /usr
+chmod 777 -R bephantbr-indurad-quanyx-service
+
 # Build module
-cd ./src
+cd /usr/bephantbr-indurad-quanyx-service/src
 mkdir build && cd build
 cmake ../
 make

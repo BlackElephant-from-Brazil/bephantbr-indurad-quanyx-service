@@ -30,7 +30,7 @@ SensorControlThread::SensorControlThread(std::string hostname, bool verbose)
     , _displayRightRaw(true)
     , _displayLeftRaw(false)
     , _displayDisp(true)
-    , _displayRightRect(false)
+    , _displayRightRect(true)
     , _displayLeftRect(false)
     , _verbose(verbose)
     , _rightLut(NULL)
@@ -224,9 +224,7 @@ void SensorControlThread::run()
         shared_ptr<IData> frame = _head->blockingRead();
 
         if (!frame){
-            qDebug() <<  "No one frame received. Stopping..." << endl;
-            stop();
-            Q_EMIT noMoreFrame();
+            continue;
         }
         else if(!frame->isValid()) {
             qDebug() <<  "No valid frame received. Stopping..." << endl;
@@ -380,7 +378,8 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
         _currentDisplayedFrames.append(frame);
 
         Q_EMIT newFrames(right, _rightWidth, _rightHeight, _rightFormat,
-                         disp, _dispWidth, _dispHeight, _dispFormat);
+                         disp, _dispWidth, _dispHeight, _dispFormat,
+                         rightRect, _rightWidthRectified, _rightHeightRectified, _rightFormat);
 
     }
 
