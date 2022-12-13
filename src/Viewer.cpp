@@ -1,15 +1,15 @@
+#include <iostream>
 #include <QDebug>
 #include "Viewer.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 
+using namespace std;
+
 Viewer::Viewer(std::string hostname, int& argc, char** argv,
-               bool _displayRightRaw, bool _displayLeftRaw,
-               bool _displayDisp, bool _displayDispOverlay,
-               bool _displayRightRect, bool _displayLeftRect,
                bool verbose, 
-               std::string displayVideoName, cv::VideoWriter displayVideoWriter,
-               std::string disparityVideoName, cv::VideoWriter disparityVideoWriter)
+               std::string _displayVideoName, cv::VideoWriter _displayVideoWriter,
+               std::string _disparityVideoName, cv::VideoWriter _disparityVideoWriter)
     : QApplication(argc, argv)
     , _sensorControl(hostname, verbose)
     , _sceneRight (NULL)
@@ -30,16 +30,10 @@ Viewer::Viewer(std::string hostname, int& argc, char** argv,
     , _disparityOverlay (NULL)
     , _rightRectified (NULL)
     , _leftRectified (NULL)
-    , _displayRightRaw (_displayRightRaw)
-    , _displayLeftRaw (_displayLeftRaw)
-    , _displayDisp (_displayDisp)
-    , _displayDispOverlay (_displayDispOverlay)
-    , _displayRightRect (_displayRightRect)
-    , _displayLeftRect (_displayLeftRect)
-    , _displayVideoName (displayVideoName)
-    , _displayVideoWriter (displayVideoWriter)
-    , _disparityVideoName (disparityVideoName)
-    , _disparityVideoWriter (disparityVideoWriter)
+    , _displayVideoName (_displayVideoName)
+    , _displayVideoWriter (_displayVideoWriter)
+    , _disparityVideoName (_disparityVideoName)
+    , _disparityVideoWriter (_disparityVideoWriter)
 {
     _sceneRight = new QGraphicsScene();
     // _viewRight = new QGraphicsView(_sceneRight);
@@ -76,8 +70,12 @@ Viewer::Viewer(std::string hostname, int& argc, char** argv,
     qRegisterMetaType< QImage::Format >("QImage::Format");
     connect(&_sensorControl, SIGNAL(newFrames(const unsigned char*,int,int,QImage::Format,
                                               const unsigned char*,int,int,QImage::Format,
+                                              const unsigned char*,int,int,QImage::Format,
+                                              const unsigned char*,int,int,QImage::Format,
                                               const unsigned char*,int,int,QImage::Format)),
             this, SLOT(displayFrames(const unsigned char*,int,int,QImage::Format,
+                                     const unsigned char*,int,int,QImage::Format,
+                                     const unsigned char*,int,int,QImage::Format,
                                      const unsigned char*,int,int,QImage::Format,
                                      const unsigned char*,int,int,QImage::Format)));
 
@@ -114,42 +112,51 @@ void Viewer::leave()
     this->quit();
 }
 
-void Viewer::insertFrameToDisplayVideo(QImage& displayImage)
+void Viewer::insertFrames(QImage& displayImage, QImage& disparityImage)
 {
     
-    cv::Mat out;
-    cv::Mat view(544, 828, CV_8UC3, (void *)displayImage.constBits(), displayImage.bytesPerLine());
-    cv::cvtColor(view, out, cv::COLOR_RGB2BGR);
-
-    _displayVideoWriter.write(out);
-}
-
-void Viewer::insertFrameToDisparityVideo(QImage& disparityImage)
-{
+    cv::Mat displayOut;
+    cv::Mat disparityOut;
     
-    cv::Mat out;
-    cv::Mat view(544, 828, CV_8UC3, (void *)disparityImage.constBits(), disparityImage.bytesPerLine());
-    cv::cvtColor(view, out, cv::COLOR_RGB2BGR);
+    cv::Mat displayView(544, 828, CV_8UC3, (void *)displayImage.constBits(), displayImage.bytesPerLine());
+    cv::Mat disparityView(544, 828, CV_8UC3, (void *)disparityImage.constBits(), disparityImage.bytesPerLine());
+    
+    cv::cvtColor(displayView, displayOut, cv::COLOR_RGB2BGR);
+    cv::cvtColor(disparityView, disparityOut, cv::COLOR_RGB2BGR);
 
-    _disparityVideoWriter.write(out);
+    _displayVideoWriter.write(displayOut);
+    _disparityVideoWriter.write(disparityOut);
 }
 
 void Viewer::displayFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
+                           const unsigned char* left, int leftWidth, int leftHeight, QImage::Format leftFormat,
                            const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat,
-                           const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat)
-{
+                           const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat,
+                           const unsigned char* leftRect, int leftRectWidth, int leftRectHeight, QImage::Format leftRectFormat)
+{    
     QImage displayImage(right, rightWidth, rightHeight, rightFormat);
 
     // Rectified right as background
     QImage disparityImage(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
-    
-    // Overlay with disparity
+
+    // // Overlay with disparity
     QPainter painter(&disparityImage);
     QImage imgDisparity(disp, dispWidth, dispHeight, dispFormat);
-    painter.setOpacity(0.4);
-    painter.drawImage(disparityImage.rect(), imgDisparity);
+    // painter.setOpacity(0.4);
+    // painter.drawImage(disparityImage.rect(), imgDisparity);
     painter.end();
+
+
+
+
+    QImage imgOverlay(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
         
-    insertFrameToDisplayVideo(displayImage);
-    insertFrameToDisparityVideo(disparityImage);
+    // Overlay with disparity
+    QPainter painterA(&imgOverlay);
+    QImage teste(disp, dispWidth, dispHeight, dispFormat);
+    painterA.setOpacity(0.5);
+    painterA.drawImage(imgOverlay.rect(), teste);
+    painterA.end();
+        
+    insertFrames(displayImage, imgOverlay);
 }

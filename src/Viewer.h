@@ -28,12 +28,9 @@ public:
      * @param head The head from which we want to view the stream
      */
     Viewer(std::string hostname, int& argc, char** argv,
-           bool _displayRightRaw, bool _displayLeftRaw,
-           bool _displayDisp, bool _displayDispOverlay,
-           bool _displayRightRect, bool _displayLeftRect,
            bool verbose, 
-           std::string displayVideoName, cv::VideoWriter displayVideoWriter,
-           std::string disparityVideoName, cv::VideoWriter disparityVideoWriter);
+           std::string _displayVideoName, cv::VideoWriter _displayVideoWriter,
+           std::string _disparityVideoName, cv::VideoWriter _disparityVideoWriter);
 
     ~Viewer();
 
@@ -62,8 +59,10 @@ public Q_SLOTS:
      * @param leftRectFormat Format of left rect image
      */
     void displayFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
+                       const unsigned char* left, int leftWidth, int leftHeight, QImage::Format leftFormat,
                        const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat,
-                       const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat);
+                       const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat,
+                       const unsigned char* leftRect, int leftRectWidth, int leftRectHeight, QImage::Format leftRectFormat);
 
     void leave();
 
@@ -78,8 +77,7 @@ protected:
      * @param pixmap [in/out] The pixmap to use (or to create if a pointer pointing to NULL is given)
      * @param image The image to display
      */
-    void insertFrameToDisplayVideo(QImage& image);
-    void insertFrameToDisparityVideo(QImage& image);
+    void insertFrames(QImage& displayImage, QImage& disparityImage);
 
 private:
     /**
@@ -176,36 +174,6 @@ private:
      * @brief _leftRectified This is used to render the left rectified image
      */
     QGraphicsPixmapItem *_leftRectified;
-
-    /**
-     * @brief _displayRightRaw This is used to enable rendering of the right image
-     */
-    bool _displayRightRaw;
-
-    /**
-     * @brief _displayLeftRaw This is used to enable rendering of the left image
-     */
-    bool _displayLeftRaw;
-
-    /**
-     * @brief _displayDisp This is used to enable rendering of the disparity image
-     */
-    bool _displayDisp;
-
-    /**
-     * @brief _displayDispOverlay This is used to enable rendering of the disparity overlay image
-     */
-    bool _displayDispOverlay;
-
-    /**
-     * @brief _displayRightRect This is used to enable rendering of the right rectified image
-     */
-    bool _displayRightRect;
-
-    /**
-     * @brief _displayLeftRect This is used to enable rendering of the left rectified image
-     */
-    bool _displayLeftRect;
 
     /**
      * @brief _displayVideoName This is used to save the display video locally

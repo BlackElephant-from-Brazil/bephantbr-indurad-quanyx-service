@@ -39,8 +39,10 @@ Q_SIGNALS:
      * For buffer which should not be displayed, the pointer is NULL.
      */
    void newFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
+                   const unsigned char* left, int leftWidth, int leftHeight, QImage::Format leftFormat,
                    const unsigned char* disp, int dispWidth, int dispHeight, QImage::Format dispFormat,
-                   const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat);
+                   const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat,
+                   const unsigned char* leftRect, int leftRectWidth, int leftRectHeight, QImage::Format leftRectFormat);
 
     /**
      * @brief noMoreFrame Signal sent when we did not get any new frame, before the blockingRead timeout expired
