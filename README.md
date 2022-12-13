@@ -31,16 +31,4 @@ Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SER
 ```
     $ reboot
 ``` 
-
-<!-- ## Acesse o OMEGA-ASH pelo navegador ou pela URL local
-`http://127.0.0.1:5000` -->
-
-<!-- para rodar o cmake:
-
-mkdir build && cd build
-cmake ../
-make
-./hello
-
-para rodar o server
-cd server && python serve.py -->
+A BlackElephant do Brasil agradece a oportunidade.
