@@ -37,12 +37,12 @@ cd /usr/bephantbr-indurad-quanyx-service
 cp ./data-sender-startup.service /etc/systemd/system
 systemctl enable data-sender-startup
 
-# Allow any changes in folder (segmentation fault resolution)
-cd /usr
-chmod 777 -R bephantbr-indurad-quanyx-service
-
 # Build module
 cd /usr/bephantbr-indurad-quanyx-service/src
 mkdir build && cd build
 cmake ../
 make
+
+# Allow any changes in folder (segmentation fault resolution)
+cd /usr/bephantbr-indurad-quanyx-service/src
+chmod 777 -R build

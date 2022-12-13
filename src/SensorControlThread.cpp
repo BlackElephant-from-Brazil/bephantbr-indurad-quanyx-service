@@ -378,8 +378,10 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
         _currentDisplayedFrames.append(frame);
 
         Q_EMIT newFrames(right, _rightWidth, _rightHeight, _rightFormat,
+                         left, _leftWidth, _leftHeight, _leftFormat,
                          disp, _dispWidth, _dispHeight, _dispFormat,
-                         rightRect, _rightWidthRectified, _rightHeightRectified, _rightFormat);
+                         rightRect, _rightWidthRectified, _rightHeightRectified, _rightFormat,
+                         leftRect, _leftWidthRectified, _leftHeightRectified, _leftFormat);
 
     }
 
