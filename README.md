@@ -31,4 +31,4 @@ Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SER
 ```
     $ reboot
 ``` 
-A BlackElephant do Brasil agradece a oportunidade.
+A BlackElephant do Brasil agradece a oportunidade...
