@@ -19,6 +19,7 @@ cd src
 cp -r /usr/bephantbr-indurad-quanyx-service/ROS/* .
 cd ..
 rosdep install --from-paths src --ignore-src -r -y
+catkin config --extend /opt/ros/melodic
 catkin build
 source devel/setup.bash
 
