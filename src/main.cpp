@@ -27,18 +27,6 @@ using namespace std;
  */
 static bool _verbose = false;
 
-
-string findFirstASHCamera() 
-{
-    IDeviceManager manager;
-
-    vector<shared_ptr<IDevice>> heads = manager.detectDevices();
-
-    string sensorName = heads[0]->getDeviceInformation()->getName();
-
-    return sensorName;
-}
-
 string findFirstASHCamera() 
 {
     IDeviceManager manager;
