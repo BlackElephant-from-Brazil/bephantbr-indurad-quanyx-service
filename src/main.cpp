@@ -39,6 +39,17 @@ string findFirstASHCamera()
     return sensorName;
 }
 
+string findFirstASHCamera() 
+{
+    IDeviceManager manager;
+
+    vector<shared_ptr<IDevice>> heads = manager.detectDevices();
+
+    string sensorName = heads[0]->getDeviceInformation()->getName();
+
+    return sensorName;
+}
+
 bool compareString (std::string a, std::string b) 
 {
     return a > b;
@@ -77,7 +88,6 @@ void deleteLastVideos()
 
 int main(int argc, char *argv[])
 {
-
     deleteLastVideos();
     string hostname = findFirstASHCamera();
     
@@ -90,7 +100,7 @@ int main(int argc, char *argv[])
     auto disparityVideoName = oss.str().append("_disparity_video.avi");
 
     int frameWidth = 828;
-	int frameHeigth = 544;
+	  int frameHeigth = 544;
 
     cv::VideoWriter displayVideoWriter(displayVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth));
     cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth), 1);
