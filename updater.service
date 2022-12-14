@@ -6,4 +6,4 @@ After=network.target
 ExecStart=/usr/bephantbr-indurad-quanyx-service/updater.sh
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

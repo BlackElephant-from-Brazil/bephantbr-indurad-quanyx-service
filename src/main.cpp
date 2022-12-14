@@ -14,6 +14,7 @@
 #include <getopt.h>
 #endif
 #include "Viewer.h"
+#include<unistd.h>
 
 #include <dirent.h>
 
@@ -29,12 +30,20 @@ static bool _verbose = false;
 
 string findFirstASHCamera() 
 {
+    string sensorName = "";
     IDeviceManager manager;
+    unsigned int microsecond = 1000000;
+    vector<shared_ptr<IDevice>> heads;
 
-    vector<shared_ptr<IDevice>> heads = manager.detectDevices();
-
-    string sensorName = heads[0]->getDeviceInformation()->getName();
-
+    do {
+        heads = manager.detectDevices();
+        if (heads.size() > 0) {
+            sensorName = heads[0]->getDeviceInformation()->getName();
+        } else {
+            cout << "no sensors found" << endl;
+            usleep(1 * microsecond);
+        }
+    } while (heads.size() == 0);
     return sensorName;
 }
 
@@ -88,12 +97,13 @@ int main(int argc, char *argv[])
     auto disparityVideoName = oss.str().append("_disparity_video.avi");
 
     int frameWidth = 828;
-	  int frameHeigth = 544;
+	int frameHeigth = 544;
 
     cv::VideoWriter displayVideoWriter(displayVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth));
     cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth), 1);
     
     /* Create and launch Viewer */
+    cout << "launching view" << endl;
     Viewer viewer(hostname, argc, argv, _verbose, displayVideoName, displayVideoWriter, disparityVideoName, disparityVideoWriter);
 
     return viewer.exec();

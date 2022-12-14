@@ -31,4 +31,9 @@ Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SER
 ```
     $ reboot
 ``` 
+
+## Sobre as filmagens
+
+As gravações ficarão salvas na pasta ` /usr/bephantbr-indurad-quanyx-service/src/build ` e poderão ser acessadas normalmente pelo explorador de arquivos do Ubuntu. O SERVICE possui uma lógica de deixar somente salvo os 6 vídeos mais recentes. Isso foi criado por uma questão de performance.
+
 A BlackElephant do Brasil agradece a oportunidade.

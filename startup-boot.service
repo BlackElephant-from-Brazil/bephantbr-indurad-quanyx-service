@@ -3,7 +3,7 @@ Description=Startup Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bephantbr-indurad-quanyx-service/src/build/SERVICE
+ExecStart=/usr/bephantbr-indurad-quanyx-service/startupBoot.sh
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

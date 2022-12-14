@@ -27,6 +27,8 @@ void subCallback(const sensor_msgs::PointCloud2& ros_msg)
     // for (auto point : pcl_cloud.points) {
     //     cout << point << endl;
     // }
+    // TODO: Aqui pode ser o envio de datas para o CLP
+    // cout << pcl_cloud.points.size() << endl;
     sendDataViaOPCDA();
     cout << "*************************** END OF FRAME HERE ***************************" << endl;
 

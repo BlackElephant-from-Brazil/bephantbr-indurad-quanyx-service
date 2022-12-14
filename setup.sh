@@ -1,3 +1,4 @@
+#!/bin/bash
 # Install all Packages to run ROS 
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
@@ -23,25 +24,34 @@ catkin config --extend /opt/ros/melodic
 catkin build
 source devel/setup.bash
 
+# Set git configuration
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+git config --global user.name "Guilherme Sartori"
+git config --global user.email "gui.sartori96@gmail.com"
+
+# Reload SystemCTL daemon
+systemctl daemon-reload
+
 # Create updater boot
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./updater.service /etc/systemd/system
-systemctl enable updater
+systemctl enable updater.service
 
 # Create configuration boot on ubuntu
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./configuration-boot.service /etc/systemd/system
-systemctl enable configuration-boot
+systemctl enable configuration-boot.service
 
 # Create startup boot on ubuntu
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./startup-boot.service /etc/systemd/system
-systemctl enable startup-boot
+systemctl enable startup-boot.service
 
 # Create the data sender startup configuration
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./data-sender-startup.service /etc/systemd/system
-systemctl enable data-sender-startup
+systemctl enable data-sender-startup.service
 
 # Build module
 cd /usr/bephantbr-indurad-quanyx-service/src
