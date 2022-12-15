@@ -30,11 +30,10 @@ echo "FINISH: Configurating environment"
 
 # Set git configuration
 echo "BEGIN: Set git configuration"
-cd /usr/bephantbr-indurad-quanyx-service
-cp ./ssh/bephantbr-indurad-quanyx-service ~/.ssh
-cp ./ssh/bephantbr-indurad-quanyx-service.pub ~/.ssh
-eval $(ssh-agent -s)
-ssh-add ~/.ssh/bephantbr-indurad-quanyx-service
+git config --system http.sslVerify false
+git config --system user.email "gui.sartori96@gmail.com"
+git config --global --unset-all http.proxy
+git config --global --unset-all https.proxy
 git config --global user.name "Guilherme Sartori"
 git config --global user.email "gui.sartori96@gmail.com"
 echo "FINISH: Set git configuration"
@@ -55,22 +54,19 @@ echo "FINISH: Create updater boot"
 echo "BEGIN: Create configuration boot on ubuntu"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./configuration-boot.service /etc/systemd/system
-systemctl enable configuration-boot.service
 echo "FINISH: Create configuration boot on ubuntu"
 
 # Create startup boot on ubuntu
 echo "BEGIN: Create startup boot on ubuntu"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./startup-boot.service /etc/systemd/system
-systemctl enable startup-boot.service
 echo "FINISH: Create startup boot on ubuntu"
 
 # Create the data sender startup configuration
-echo "BEGIN: Create the data sender startup configuration"
+echo "BEGIN: Create the find objects ros"
 cd /usr/bephantbr-indurad-quanyx-service
-cp ./data-sender-startup.service /etc/systemd/system
-systemctl enable data-sender-startup.service
-echo "FINISH: Create the data sender startup configuration"
+cp ./start-find-objects-ros.service /etc/systemd/system
+echo "FINISH: Create the find objects ros"
 
 # Build module
 echo "BEGIN: Build module"

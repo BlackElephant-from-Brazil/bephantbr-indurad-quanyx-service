@@ -1,0 +1,9 @@
+[Unit]
+Description=StartUp the object finder Node
+After=network.target
+
+[Service]
+ExecStart=/usr/bephantbr-indurad-quanyx-service/startFindObjectsROS.sh
+
+[Install]
+WantedBy=multi-user.target
