@@ -13,9 +13,9 @@
 using namespace std;
 typedef pcl::PointXYZRGB PointT;
 
-void sendDataViaOPCDA()
+void analizeFrame()
 {
-    cout << "Sending data" << endl;
+    cout << "Analizing frame" << endl;
 }
 
 void subCallback(const sensor_msgs::PointCloud2& ros_msg)
@@ -27,9 +27,8 @@ void subCallback(const sensor_msgs::PointCloud2& ros_msg)
     // for (auto point : pcl_cloud.points) {
     //     cout << point << endl;
     // }
-    // TODO: Aqui pode ser o envio de datas para o CLP
     // cout << pcl_cloud.points.size() << endl;
-    sendDataViaOPCDA();
+    analizeFrame();
     cout << "*************************** END OF FRAME HERE ***************************" << endl;
 
 }

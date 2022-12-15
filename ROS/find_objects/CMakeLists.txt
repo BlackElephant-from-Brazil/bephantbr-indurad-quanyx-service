@@ -1,7 +1,7 @@
 # Send PCL data from ROS to OPCDA
 cmake_minimum_required(VERSION 2.8)
 
-project(pcl_to_clp_data_sender)
+project(find_objects)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 if(UNIX)
@@ -26,9 +26,9 @@ include_directories(
 add_definitions(${PCL_DEFINITIONS})
 
 # Tell CMake we are creating an executable with those files
-add_executable(pcl_to_clp_data_sender main.cpp)
+add_executable(find_objects main.cpp)
 # And link this executable with the required libraries for AutonomousSensorHead
-target_link_libraries(pcl_to_clp_data_sender ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(find_objects ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 # Add msg dependency
 add_dependencies(${PROJECT_NAME} omega_msgs_generate_messages_cpp)
 
