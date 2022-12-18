@@ -21,12 +21,38 @@
 #include <IDevice.h>
 #include <IDeviceManager.h>
 
+#include <JetsonGPIO.h>
+
 using namespace std;
 
 /**
  * @brief _verbose True if user wants to get more information in standard output, like frame metata
  */
 static bool _verbose = false;
+
+void alertNoSensorsFound() 
+{
+    int output_no_sensor_found = 18;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(output_no_sensor_found, GPIO::OUT, 1);
+
+    GPIO::output(output_no_sensor_found, 1);
+
+    GPIO::cleanup();
+}
+
+void clearNoSensorsFound()
+{
+    int output_no_sensor_found = 18;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(output_no_sensor_found, GPIO::OUT, 0);
+
+    GPIO::output(output_no_sensor_found, 0);
+
+    GPIO::cleanup();
+}
 
 string findFirstASHCamera() 
 {
@@ -39,8 +65,10 @@ string findFirstASHCamera()
         heads = manager.detectDevices();
         if (heads.size() > 0) {
             sensorName = heads[0]->getDeviceInformation()->getName();
+            clearNoSensorsFound();
         } else {
             cout << "no sensors found" << endl;
+            alertNoSensorsFound();
             usleep(1 * microsecond);
         }
     } while (heads.size() == 0);

@@ -2,10 +2,17 @@
 # 
 
 project(SERVICE)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.11)
 
 include(FindPkgConfig)
 include(${CMAKE_CURRENT_SOURCE_DIR}/WinDeployQt5.cmake)
+include(FetchContent)
+FetchContent_Declare(
+    JetsonGPIO
+    GIT_REPOSITORY https://github.com/pjueon/JetsonGPIO.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(JetsonGPIO)
 
 find_package( OpenCV REQUIRED )
 find_package(CalibProcessor)
@@ -42,7 +49,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Tell CMake we are creating an executable with those files
 add_executable(SERVICE main.cpp Viewer.cpp ImageProcessing.cpp SensorControlThread.cpp)
 # And link this executable with the required libraries for AutonomousSensorHead
-target_link_libraries(SERVICE ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS})
+target_link_libraries(SERVICE ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS} JetsonGPIO::JetsonGPIO)
 qt5_use_modules(SERVICE Core Gui)
         
 install(TARGETS ${PROJECT_NAME}
