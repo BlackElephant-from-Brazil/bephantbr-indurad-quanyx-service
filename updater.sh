@@ -9,13 +9,14 @@ cd /usr/bephantbr-indurad-quanyx-service
 git pull
 echo "FINISH: Pull updates from git"
 
+# Reload systemctl
+systemctl daemon-reload
+
 # Install ROS Updates
 echo "BEGIN: Install ROS Updates"
+source /opt/ros/melodic/setup.bash
 cd ~/catkin_ws/src
 cp -r /usr/bephantbr-indurad-quanyx-service/ROS/* .
-cd ..
-catkin build
-source devel/setup.bash
 echo "FINISH: Install ROS Updates"
 
 # Install src and build updates
@@ -39,3 +40,5 @@ echo "FINISH: Start ROS find_objects"
 echo "BEGIN: Start SERVICE"
 systemctl start startup-boot.service
 echo "FINISH: Start SERVICE"
+
+# journalctl --since "2022-12-16 13:36:00" --no-pager

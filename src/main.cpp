@@ -54,9 +54,10 @@ bool compareString (std::string a, std::string b)
 
 void deleteLastVideos()
 {
+    
     DIR *dr;
     struct dirent *en;
-    dr = opendir("."); 
+    dr = opendir("/usr/bephantbr-indurad-quanyx-service/src/build/"); 
     vector<string> fileNames;
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
@@ -93,8 +94,8 @@ int main(int argc, char *argv[])
 
     std::ostringstream oss;
     oss << std::put_time(&tm, "%Y-%m-%d:%H-%M-%S");
-    auto displayVideoName = oss.str().append("_display_video.avi");
-    auto disparityVideoName = oss.str().append("_disparity_video.avi");
+    auto displayVideoName = "/usr/bephantbr-indurad-quanyx-service/src/build/" + oss.str().append("_display_video.avi");
+    auto disparityVideoName = "/usr/bephantbr-indurad-quanyx-service/src/build/" + oss.str().append("_disparity_video.avi");
 
     int frameWidth = 828;
 	int frameHeigth = 544;

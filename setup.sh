@@ -38,11 +38,6 @@ git config --global user.name "Guilherme Sartori"
 git config --global user.email "gui.sartori96@gmail.com"
 echo "FINISH: Set git configuration"
 
-# Reload SystemCTL daemon
-echo "BEGIN: Reload SystemCTL daemon"
-systemctl daemon-reload
-echo "FINISH: Reload SystemCTL daemon"
-
 # Create updater boot
 echo "BEGIN: Create updater boot"
 cd /usr/bephantbr-indurad-quanyx-service
@@ -67,6 +62,11 @@ echo "BEGIN: Create the find objects ros"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./start-find-objects-ros.service /etc/systemd/system
 echo "FINISH: Create the find objects ros"
+
+# Reload SystemCTL daemon
+echo "BEGIN: Reload SystemCTL daemon"
+systemctl daemon-reload
+echo "FINISH: Reload SystemCTL daemon"
 
 # Build module
 echo "BEGIN: Build module"
