@@ -15,17 +15,13 @@ Coloque a senha e aguarde o termino da atualização. Em seguida rode os seguint
 
 ## Sequencia de comandos para setup do SERVICE
 
-Entre como super usuário com o seguinte comando:
-```
-    $ sudo su
-```
-Depois digite a senha do usuário e siga os próximos passos:
+Siga os passos:
 ```
     $ cd /usr
-    $ git clone https://github.com/guisartori/bephantbr-indurad-quanyx-service.git
+    $ sudo git clone https://github.com/guisartori/bephantbr-indurad-quanyx-service.git
     $ cd bephantbr-indurad-quanyx-service
-    $ chmod 777 -R ./setup.sh
-    $ ./setup.sh
+    $ sudo chmod 777 -R ./setup.sh
+    $ sudo ./setup.sh
 ```
 Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SERVICE estará funcionando normalmente.
 ```
