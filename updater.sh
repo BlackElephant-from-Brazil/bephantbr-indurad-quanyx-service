@@ -41,4 +41,4 @@ echo "BEGIN: Start SERVICE"
 systemctl start startup-boot.service
 echo "FINISH: Start SERVICE"
 
-# journalctl --since "2022-12-16 13:36:00" --no-pager
+# journalctl --since "2022-12-19 11:11:00" --no-pager

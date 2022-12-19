@@ -1,5 +1,5 @@
 #include <iostream>
-#include <direct.h>
+#include <sys/stat.h>
 
 // ROS 
 #include "ros/ros.h"
@@ -33,7 +33,25 @@ void createFolder()
 
     folderName = "/usr/bephantbr-indurad-quanyx-service/ROS/find_objects/pcds/" + oss.str();
 
-    mkdir(folderName);
+    mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+}
+
+void deleteAll(string folderName)
+{
+    
+    DIR *dr;
+    struct dirent *en;
+    dr = opendir(folderName.c_str()); 
+    if (dr) {
+        while ((en = readdir(dr)) != NULL) {
+            string fileName = en->d_name;
+            string fileToDelete = folderName + "/" + fileName;
+            cout << fileToDelete << endl;
+            remove(fileToDelete.c_str());
+        }
+
+        closedir(dr);
+    }
 }
 
 
@@ -44,8 +62,11 @@ bool compareString (std::string a, std::string b)
 
 void deleteOlderFolder()
 {
+    string path = "/usr/bephantbr-indurad-quanyx-service/ROS/find_objects/pcds/";
+
+    DIR *dr;
     struct dirent *en;
-    dr = opendir("/usr/bephantbr-indurad-quanyx-service/ROS/find_objects/pcds/"); 
+    dr = opendir(path.c_str()); 
     vector<string> folderNames;
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
@@ -57,19 +78,21 @@ void deleteOlderFolder()
     }
 
     std::sort(folderNames.begin(),folderNames.end(),compareString);
-    if (folderNames.size() >= 3) {
-        folderNames.erase(folderNames.begin(), folderNames.begin() + 3);
+    if (folderNames.size() >= 2) {
+        folderNames.erase(folderNames.begin(), folderNames.begin() + 2);
         for (string folder: folderNames) {
             char folderToDelete[folder.length() + 1];
             strcpy(folderToDelete, folder.c_str());
-            remove(folderToDelete);
+            string folderInPath =  path + folderToDelete;
+            deleteAll(folderInPath);
+            rmdir(folderInPath.c_str());
         }
     }
 }
 
 void savePCLToPCD(pcl::PointCloud<PointT> cloud)
 {
-    auto fileName = folderName + std::to_string(counterPCD) + ".pcd";
+    auto fileName = folderName + "/" + std::to_string(counterPCD) + ".pcd";
 
     pcl::io::savePCDFileASCII(fileName, cloud);
     counterPCD++;
