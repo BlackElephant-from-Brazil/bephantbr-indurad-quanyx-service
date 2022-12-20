@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# Install OMEGA ASH
+echo "BEGIN: Install OMEGA ASH"
+
+echo "FINISH: Install OMEGA ASH"
+
 # Install all Packages to run ROS 
 echo "BEGIN: Install all Packages to run ROS"
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
