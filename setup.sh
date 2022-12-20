@@ -2,7 +2,10 @@
 
 # Install OMEGA ASH
 echo "BEGIN: Install OMEGA ASH"
-
+apt-get update -y
+dpkg -i ASH_UBUNTU-18-04_ARM64_v2.1.1.deb
+apt-get -f install -y
+dpkg -i ASH_UBUNTU-18-04_ARM64_v2.1.1.deb
 echo "FINISH: Install OMEGA ASH"
 
 # Install all Packages to run ROS 

@@ -82,10 +82,10 @@ bool compareString (std::string a, std::string b)
 
 void deleteLastVideos()
 {
-    string path = "/usr/bephantbr-indurad-quanyx-service/src/build/"
+    string path = "/usr/bephantbr-indurad-quanyx-service/src/build/";
     DIR *dr;
     struct dirent *en;
-    dr = opendir(path); 
+    dr = opendir(path.c_str()); 
     vector<string> fileNames;
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
@@ -104,7 +104,7 @@ void deleteLastVideos()
             char fileToDelete[file.length() + 1];
             strcpy(fileToDelete, file.c_str());
             string fileInPath =  path + fileToDelete;
-            remove(fileToDelete.c_str());
+            remove(fileInPath.c_str());
         }
     }
 }
