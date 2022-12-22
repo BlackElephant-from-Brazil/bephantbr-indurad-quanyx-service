@@ -63,7 +63,7 @@ echo "FINISH: Set git configuration"
 echo "BEGIN: Create updater boot"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./updater.service /etc/systemd/system
-systemctl enable updater.service
+# systemctl enable updater.service
 echo "FINISH: Create updater boot"
 
 # Create configuration boot on ubuntu
