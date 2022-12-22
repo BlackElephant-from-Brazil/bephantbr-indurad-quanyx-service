@@ -15,7 +15,7 @@ systemctl daemon-reload
 # Install ROS Updates
 echo "BEGIN: Install ROS Updates"
 source /opt/ros/melodic/setup.bash
-cd ~/catkin_ws/src
+cd /home/cmak/catkin_ws/src
 cp -r /usr/bephantbr-indurad-quanyx-service/ROS/* .
 echo "FINISH: Install ROS Updates"
 
@@ -28,17 +28,17 @@ echo "FINISH: Install src and build updates"
 
 # Start environment configurations up
 echo "BEGIN: Start environment configurations up"
-# systemctl start configuration-boot.service
+systemctl start configuration-boot.service
 echo "FINISH: Start environment configurations up"
 
 # Start ROS find_objects
 echo "BEGIN: Start ROS find_objects"
-# systemctl start start-find-objects-ros.service
+systemctl start start-find-objects-ros.service
 echo "FINISH: Start ROS find_objects"
 
 # Start SERVICE
 echo "BEGIN: Start SERVICE"
-# systemctl start startup-boot.service
+systemctl start startup-boot.service
 echo "FINISH: Start SERVICE"
 
 # journalctl --since "2022-12-19 11:11:00" --no-pager

@@ -10,7 +10,6 @@ echo "FINISH: Install OMEGA ASH"
 
 # Install all Packages to run ROS 
 echo "BEGIN: Install all Packages to run ROS"
-export ROS_PYTHON_VERSION=3
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 apt install curl
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
@@ -43,18 +42,19 @@ echo "FINISH: Setup catkin to 3.11"
 
 # Configurating environment
 echo "BEGIN: Configurating environment"
+chown -R $USER ~/.ros
 apt-get install python-rosdep python-catkin-tools python-rospkg -y
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws
+mkdir -p /home/cmak/catkin_ws/src
+cd /home/cmak/catkin_ws
 catkin init
 cd src
 cp -r /usr/bephantbr-indurad-quanyx-service/ROS/* .
 cd ..
+rosdep install --from-paths src --ignore-src -r -y --rosdistro melodic
 catkin config --extend /opt/ros/melodic
 cp /usr/bephantbr-indurad-quanyx-service/cv_bridgeConfig.cmake /opt/ros/melodic/share/cv_bridge/cmake/
 catkin build
 source devel/setup.bash
-rosdep install --from-paths src --ignore-src -r -y
 echo "FINISH: Configurating environment"
 
 # Set git configuration
@@ -71,7 +71,7 @@ echo "FINISH: Set git configuration"
 echo "BEGIN: Create updater boot"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./updater.service /etc/systemd/system
-# systemctl enable updater.service
+systemctl enable updater.service
 echo "FINISH: Create updater boot"
 
 # Create configuration boot on ubuntu
