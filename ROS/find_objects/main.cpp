@@ -78,8 +78,8 @@ void deleteOlderFolder()
     }
 
     std::sort(folderNames.begin(),folderNames.end(),compareString);
-    if (folderNames.size() >= 2) {
-        folderNames.erase(folderNames.begin(), folderNames.begin() + 2);
+    if (folderNames.size() >= 3) {
+        folderNames.erase(folderNames.begin(), folderNames.begin() + 3);
         for (string folder: folderNames) {
             char folderToDelete[folder.length() + 1];
             strcpy(folderToDelete, folder.c_str());
@@ -105,10 +105,6 @@ void subCallback(const sensor_msgs::PointCloud2& ros_msg)
     pcl::fromROSMsg(ros_msg, pcl_cloud);
     
     cout << "*************************** NEW FRAME HERE ***************************" << endl;
-    // for (auto point : pcl_cloud.points) {
-    //     cout << point << endl;
-    // }
-    // cout << pcl_cloud.points.size() << endl;
     analizeFrame();
     savePCLToPCD(pcl_cloud);
     cout << "*************************** END OF FRAME HERE ***************************" << endl;

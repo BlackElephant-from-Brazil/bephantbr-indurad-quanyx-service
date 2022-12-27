@@ -10,6 +10,8 @@
 
 #include <JetsonGPIO.h>
 
+#include <JetsonGPIO.h>
+
 /********************************************************************************
  *  INIT / EXIT
  ********************************************************************************/
@@ -177,6 +179,30 @@ void SensorControlThread::unrefFrame()
         // qDebug() << "Dropping one frame from the queue of size: " << _currentDisplayedFrames.size();
         _currentDisplayedFrames.dequeue();
     }
+}
+
+void SensorControlThread::alertNoFrameDetected()
+{
+    int no_frame_detected = 17;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(no_frame_detected, GPIO::OUT, 1);
+
+    GPIO::output(no_frame_detected, 1);
+
+    GPIO::cleanup();
+}
+
+void SensorControlThread::clearNoFrameDetected()
+{
+    int no_frame_detected = 17;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(no_frame_detected, GPIO::OUT, 0);
+
+    GPIO::output(no_frame_detected, 0);
+
+    GPIO::cleanup();
 }
 
 /********************************************************************************

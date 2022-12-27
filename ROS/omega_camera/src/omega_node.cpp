@@ -277,10 +277,10 @@ int main(int argc, char **argv)
         /* Get a frame */
         shared_ptr<IData> frame = _head->blockingRead();
         if (!frame || !frame->isValid()) {
-            log_info("No frame received. Stopping...", 2);
+            log_info("No frame received. Waiting...", 2);
             /* Stop ROS */
-            ros::shutdown();
-            return_code = 1;
+            // ros::shutdown();
+            // return_code = 1;
             continue;
         }
         int int_seq_id = frame->getFrameNumber();

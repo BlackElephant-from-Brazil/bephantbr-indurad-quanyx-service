@@ -31,10 +31,6 @@ using namespace std;
  */
 static bool _verbose = false;
 
-void configAllIO()
-{
-}
-
 string findFirstASHCamera()
 {
     string sensorName = "";
@@ -57,7 +53,6 @@ string findFirstASHCamera()
             usleep(1 * microsecond);
         }
     } while (heads.size() == 0);
-    GPIO::cleanup();
     return sensorName;
 }
 

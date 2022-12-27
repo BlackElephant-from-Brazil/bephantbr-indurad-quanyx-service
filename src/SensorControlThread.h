@@ -64,6 +64,10 @@ protected:
      */
     void processFrame(shared_ptr<IData> frame);
 
+    
+    void alertNoFrameDetected();
+    void clearNoFrameDetected();
+
     /**
      * @brief run Thread main loop
      *
