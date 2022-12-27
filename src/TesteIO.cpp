@@ -5,9 +5,9 @@
 using namespace std;
 using namespace GPIO;
 
-void IOManager::config()
+IOManager::IOManager()
 {
-    cout << "STARTING GPIO" << endl;
+    cout << "sTARTING GPIO" << endl;
     setmode(BCM);
 
     setup(led_no_sensors_found, OUT, LOW);
