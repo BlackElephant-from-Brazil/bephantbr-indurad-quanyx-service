@@ -7,6 +7,8 @@
 #include "SensorControlThread.h"
 #include "ImageProcessing.h"
 
+#include <JetsonGPIO.h>
+
 /********************************************************************************
  *  INIT / EXIT
  ********************************************************************************/
@@ -186,6 +188,30 @@ void SensorControlThread::unrefFrame()
     }
 }
 
+void SensorControlThread::alertNoFrameDetected() 
+{
+    int no_frame_detected = 17;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(no_frame_detected, GPIO::OUT, 1);
+
+    GPIO::output(no_frame_detected, 1);
+
+    GPIO::cleanup();
+}
+
+void SensorControlThread::clearNoFrameDetected()
+{
+    int no_frame_detected = 17;
+
+    GPIO::setmode(GPIO::BCM);
+    GPIO::setup(no_frame_detected, GPIO::OUT, 0);
+
+    GPIO::output(no_frame_detected, 0);
+
+    GPIO::cleanup();
+}
+
 /********************************************************************************
  *  THREAD MAIN FUNCTION
  ********************************************************************************/
@@ -220,10 +246,14 @@ void SensorControlThread::run()
     _current_fps = 0;
 
     while (!leaving) {
+        clearNoFrameDetected();
         /* Get a frame and transmit it to Viewer */
         shared_ptr<IData> frame = _head->blockingRead();
 
         if (!frame){
+            alertNoFrameDetected();
+            std::cout << "hmmmm...." << std::endl;
+            //TODO: ACENDER O LED
             continue;
         }
         else if(!frame->isValid()) {

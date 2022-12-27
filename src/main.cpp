@@ -30,6 +30,11 @@ using namespace std;
  */
 static bool _verbose = false;
 
+void configAllIO()
+{
+    
+}
+
 void alertNoSensorsFound() 
 {
     int output_no_sensor_found = 18;
@@ -39,7 +44,6 @@ void alertNoSensorsFound()
 
     GPIO::output(output_no_sensor_found, 1);
 
-    GPIO::cleanup();
 }
 
 void clearNoSensorsFound()
@@ -51,7 +55,6 @@ void clearNoSensorsFound()
 
     GPIO::output(output_no_sensor_found, 0);
 
-    GPIO::cleanup();
 }
 
 string findFirstASHCamera() 
@@ -72,6 +75,7 @@ string findFirstASHCamera()
             usleep(1 * microsecond);
         }
     } while (heads.size() == 0);
+    GPIO::cleanup();
     return sensorName;
 }
 
@@ -133,7 +137,6 @@ int main(int argc, char *argv[])
     cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth), 1);
     
     /* Create and launch Viewer */
-    cout << "launching view" << endl;
     Viewer viewer(hostname, argc, argv, _verbose, displayVideoName, displayVideoWriter, disparityVideoName, disparityVideoWriter);
 
     return viewer.exec();

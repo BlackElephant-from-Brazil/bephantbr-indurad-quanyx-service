@@ -9,9 +9,6 @@ cd /usr/bephantbr-indurad-quanyx-service
 git pull
 echo "FINISH: Pull updates from git"
 
-# Reload systemctl
-systemctl daemon-reload
-
 # Install ROS Updates
 echo "BEGIN: Install ROS Updates"
 source /opt/ros/melodic/setup.bash
@@ -26,6 +23,16 @@ cmake ../
 make
 echo "FINISH: Install src and build updates"
 
+# Reload all systemd services
+echo "BEGIN: Reload all systemd services"
+cd /usr/bephantbr-indurad-quanyx-service
+cp ./updater.service /etc/systemd/system
+cp ./configuration-boot.service /etc/systemd/system
+cp ./startup-boot.service /etc/systemd/system
+cp ./start-find-objects-ros.service /etc/systemd/system
+systemctl daemon-reload
+echo "FINISH: Reload all systemd services"
+
 # Start environment configurations up
 echo "BEGIN: Start environment configurations up"
 systemctl start configuration-boot.service
@@ -38,7 +45,14 @@ echo "FINISH: Start ROS find_objects"
 
 # Start SERVICE
 echo "BEGIN: Start SERVICE"
+systemctl stop startup-boot.service
 systemctl start startup-boot.service
 echo "FINISH: Start SERVICE"
+
+# Configure camera to eth0
+echo "BEGIN: Configure camera to eth0"
+pkill avahi
+avahi-autoipd -D --force-bind --no-chroot eth0
+echo "FINISH: Configure camera to eth0"
 
 # journalctl --since "2022-12-19 11:11:00" --no-pager

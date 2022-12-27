@@ -84,6 +84,7 @@ echo "FINISH: Create configuration boot on ubuntu"
 echo "BEGIN: Create startup boot on ubuntu"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./startup-boot.service /etc/systemd/system
+systemctl enable startup-boot.service
 echo "FINISH: Create startup boot on ubuntu"
 
 # Create the data sender startup configuration
@@ -99,6 +100,7 @@ echo "FINISH: Reload SystemCTL daemon"
 
 # Build module
 echo "BEGIN: Build module"
+echo "Defaults env_keep += \"DISPLAY XAUTHORITY\"" >> /etc/sudoers.d/local
 cd /usr/bephantbr-indurad-quanyx-service/src
 mkdir build && cd build
 cmake ../

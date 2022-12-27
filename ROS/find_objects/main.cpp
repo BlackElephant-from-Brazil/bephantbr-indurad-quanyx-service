@@ -105,10 +105,6 @@ void subCallback(const sensor_msgs::PointCloud2& ros_msg)
     pcl::fromROSMsg(ros_msg, pcl_cloud);
     
     cout << "*************************** NEW FRAME HERE ***************************" << endl;
-    // for (auto point : pcl_cloud.points) {
-    //     cout << point << endl;
-    // }
-    // cout << pcl_cloud.points.size() << endl;
     analizeFrame();
     savePCLToPCD(pcl_cloud);
     cout << "*************************** END OF FRAME HERE ***************************" << endl;

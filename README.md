@@ -23,7 +23,13 @@ Siga os passos:
     $ sudo chmod 777 -R ./setup.sh
     $ sudo ./setup.sh
 ```
-Para finalizar a instalação, reinicie o computador. Quando ele reiniciar o SERVICE estará funcionando normalmente.
+
+## Configure a câmera
+
+<!-- TODO -->
+
+
+Para começar a utilizar o SERVICE normalmente basta apenas reiniciar o computador.
 ```
     $ reboot
 ``` 

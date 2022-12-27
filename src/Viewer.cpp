@@ -116,16 +116,16 @@ void Viewer::insertFrames(QImage& displayImage, QImage& disparityImage)
 {
     
     cv::Mat displayOut;
-    cv::Mat disparityOut;
+    // cv::Mat disparityOut;
     
     cv::Mat displayView(544, 828, CV_8UC3, (void *)displayImage.constBits(), displayImage.bytesPerLine());
-    cv::Mat disparityView(544, 828, CV_8UC3, (void *)disparityImage.constBits(), disparityImage.bytesPerLine());
+    // cv::Mat disparityView(544, 828, CV_8UC3, (void *)disparityImage.constBits(), disparityImage.bytesPerLine());
     
     cv::cvtColor(displayView, displayOut, cv::COLOR_RGB2BGR);
-    cv::cvtColor(disparityView, disparityOut, cv::COLOR_RGB2BGR);
+    // cv::cvtColor(disparityView, disparityOut, cv::COLOR_RGB2BGR);
 
     _displayVideoWriter.write(displayOut);
-    _disparityVideoWriter.write(disparityOut);
+    // _disparityVideoWriter.write(disparityOut);
 }
 
 void Viewer::displayFrames(const unsigned char* right, int rightWidth, int rightHeight, QImage::Format rightFormat,
@@ -134,29 +134,29 @@ void Viewer::displayFrames(const unsigned char* right, int rightWidth, int right
                            const unsigned char* rightRect, int rightRectWidth, int rightRectHeight, QImage::Format rightRectFormat,
                            const unsigned char* leftRect, int leftRectWidth, int leftRectHeight, QImage::Format leftRectFormat)
 {    
-    QImage displayImage(right, rightWidth, rightHeight, rightFormat);
+    QImage rightImage(right, rightWidth, rightHeight, rightFormat);
 
     // Rectified right as background
-    QImage disparityImage(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
+    // QImage disparityImage(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
 
-    // // Overlay with disparity
-    QPainter painter(&disparityImage);
+    // // // Overlay with disparity
+    // QPainter painter(&disparityImage);
     QImage imgDisparity(disp, dispWidth, dispHeight, dispFormat);
-    // painter.setOpacity(0.4);
-    // painter.drawImage(disparityImage.rect(), imgDisparity);
-    painter.end();
+    // // painter.setOpacity(0.4);
+    // // painter.drawImage(disparityImage.rect(), imgDisparity);
+    // // painter.end();
 
 
 
 
-    QImage imgOverlay(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
+    // QImage imgOverlay(rightRect, rightRectWidth, rightRectHeight, rightRectFormat);
         
-    // Overlay with disparity
-    QPainter painterA(&imgOverlay);
-    QImage teste(disp, dispWidth, dispHeight, dispFormat);
-    painterA.setOpacity(0.5);
-    painterA.drawImage(imgOverlay.rect(), teste);
-    painterA.end();
+    // // Overlay with disparity
+    // QPainter painterA(&imgOverlay);
+    // QImage dispImage(disp, dispWidth, dispHeight, dispFormat);
+    // painterA.setOpacity(0.5);
+    // painterA.drawImage(imgOverlay.rect(), dispImage);
+    // painterA.end();
         
-    insertFrames(displayImage, imgOverlay);
+    insertFrames(rightImage, imgDisparity);
 }
