@@ -1,3 +1,0 @@
-/home/guisartori/Documentos/Programação/blackelephant/clients/indurad/bephantbr-indurad-quanyx-service/teste/build/CMakeFiles/Teste.dir
-/home/guisartori/Documentos/Programação/blackelephant/clients/indurad/bephantbr-indurad-quanyx-service/teste/build/CMakeFiles/edit_cache.dir
-/home/guisartori/Documentos/Programação/blackelephant/clients/indurad/bephantbr-indurad-quanyx-service/teste/build/CMakeFiles/rebuild_cache.dir
