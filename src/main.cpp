@@ -14,7 +14,8 @@
 #include <getopt.h>
 #endif
 #include "Viewer.h"
-#include<unistd.h>
+#include "IOManager.h"
+#include <unistd.h>
 
 #include <dirent.h>
 
@@ -30,52 +31,37 @@ using namespace std;
  */
 static bool _verbose = false;
 
-void alertNoSensorsFound() 
+void configAllIO()
 {
-    int output_no_sensor_found = 18;
-
-    GPIO::setmode(GPIO::BCM);
-    GPIO::setup(output_no_sensor_found, GPIO::OUT, 1);
-
-    GPIO::output(output_no_sensor_found, 1);
-
-    GPIO::cleanup();
 }
 
-void clearNoSensorsFound()
-{
-    int output_no_sensor_found = 18;
-
-    GPIO::setmode(GPIO::BCM);
-    GPIO::setup(output_no_sensor_found, GPIO::OUT, 0);
-
-    GPIO::output(output_no_sensor_found, 0);
-
-    GPIO::cleanup();
-}
-
-string findFirstASHCamera() 
+string findFirstASHCamera()
 {
     string sensorName = "";
     IDeviceManager manager;
     unsigned int microsecond = 1000000;
     vector<shared_ptr<IDevice>> heads;
 
-    do {
+    do
+    {
         heads = manager.detectDevices();
-        if (heads.size() > 0) {
+        if (heads.size() > 0)
+        {
             sensorName = heads[0]->getDeviceInformation()->getName();
-            clearNoSensorsFound();
-        } else {
+            IOManager::clearNoSensorsFound();
+        }
+        else
+        {
             cout << "no sensors found" << endl;
-            alertNoSensorsFound();
+            IOManager::alertNoSensorsFound();
             usleep(1 * microsecond);
         }
     } while (heads.size() == 0);
+    GPIO::cleanup();
     return sensorName;
 }
 
-bool compareString (std::string a, std::string b) 
+bool compareString(std::string a, std::string b)
 {
     return a > b;
 }
@@ -85,25 +71,30 @@ void deleteLastVideos()
     string path = "/usr/bephantbr-indurad-quanyx-service/src/build/";
     DIR *dr;
     struct dirent *en;
-    dr = opendir(path.c_str()); 
+    dr = opendir(path.c_str());
     vector<string> fileNames;
-    if (dr) {
-        while ((en = readdir(dr)) != NULL) {
+    if (dr)
+    {
+        while ((en = readdir(dr)) != NULL)
+        {
             string fileName = en->d_name;
-            if (fileName.find(".avi") != std::string::npos) {
+            if (fileName.find(".avi") != std::string::npos)
+            {
                 fileNames.push_back(fileName);
             }
         }
 
         closedir(dr);
     }
-    std::sort(fileNames.begin(),fileNames.end(),compareString);
-    if (fileNames.size() >= 4) {
-        fileNames.erase(fileNames.begin(), fileNames.begin()+4);
-        for (string file: fileNames) {
+    std::sort(fileNames.begin(), fileNames.end(), compareString);
+    if (fileNames.size() >= 4)
+    {
+        fileNames.erase(fileNames.begin(), fileNames.begin() + 4);
+        for (string file : fileNames)
+        {
             char fileToDelete[file.length() + 1];
             strcpy(fileToDelete, file.c_str());
-            string fileInPath =  path + fileToDelete;
+            string fileInPath = path + fileToDelete;
             remove(fileInPath.c_str());
         }
     }
@@ -115,9 +106,10 @@ void deleteLastVideos()
 
 int main(int argc, char *argv[])
 {
+    IOManager::config();
     deleteLastVideos();
     string hostname = findFirstASHCamera();
-    
+
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
 
@@ -127,13 +119,12 @@ int main(int argc, char *argv[])
     auto disparityVideoName = "/usr/bephantbr-indurad-quanyx-service/src/build/" + oss.str().append("_disparity_video.avi");
 
     int frameWidth = 828;
-	int frameHeigth = 544;
+    int frameHeigth = 544;
 
     cv::VideoWriter displayVideoWriter(displayVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth));
     cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth), 1);
-    
+
     /* Create and launch Viewer */
-    cout << "launching view" << endl;
     Viewer viewer(hostname, argc, argv, _verbose, displayVideoName, displayVideoWriter, disparityVideoName, disparityVideoWriter);
 
     return viewer.exec();
