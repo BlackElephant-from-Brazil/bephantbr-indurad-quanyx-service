@@ -42,10 +42,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Tell CMake we are creating an executable with those files
 add_executable(SERVICE main.cpp Viewer.cpp ImageProcessing.cpp SensorControlThread.cpp IOManager.cpp)
-# add_executable(SERVICE main.cpp Viewer.cpp ImageProcessing.cpp SensorControlThread.cpp)
 # And link this executable with the required libraries for AutonomousSensorHead
 target_link_libraries(SERVICE ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS} JetsonGPIO::JetsonGPIO)
-# target_link_libraries(SERVICE ${ASH_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${OpenCV_LIBS})
 qt5_use_modules(SERVICE Core Gui)
         
 install(TARGETS ${PROJECT_NAME}
