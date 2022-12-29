@@ -36,15 +36,17 @@ void turnServiceOn()
 void configureGPIO()
 {
     const int button_change_to_service = 22;
+    const int led_no_sensors_found = 18;
 
     cout << "STARTING GPIO" << endl;
 
     cleanup();
     setmode(BCM);
 
-    setup(IOManager::button_change_to_service, IN);
+    setup(button_change_to_service, IN);
+    setup(led_no_sensors_found, OUT, LOW);
 
-    add_event_detect(IOManager::button_change_to_service, GPIO::Edge::RISING, IOManager::turnServiceOn, 10);
+    add_event_detect(button_change_to_service, GPIO::Edge::RISING, turnServiceOn, 10);
 }
 
 void createFolder()
@@ -146,6 +148,7 @@ void receiveDataFromROS(int argc, char *argv[])
 
 string findFirstASHCamera()
 {
+    const int led_no_sensors_found = 18;
     string sensorName = "";
     IDeviceManager manager;
     unsigned int microsecond = 1000000;
@@ -161,11 +164,13 @@ string findFirstASHCamera()
         else
         {
             cout << "no sensors found" << endl;
+            output(led_no_sensors_found, HIGH);
             system("pkill avahi");
             system("avahi-autoipd -D --force-bind --no-chroot eth0");
             usleep(5 * microsecond);
         }
     } while (heads.size() == 0);
+    output(led_no_sensors_found, LOW);
     return sensorName;
 }
 
