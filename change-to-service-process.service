@@ -1,0 +1,9 @@
+[Unit]
+Description=Stop ROS and turn SERVICE on
+After=network.target
+
+[Service]
+ExecStart=/usr/bephantbr-indurad-quanyx-service/changeToService.sh
+
+[Install]
+WantedBy=multi-user.target

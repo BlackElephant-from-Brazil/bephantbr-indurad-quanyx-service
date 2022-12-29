@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 if(UNIX)
 
 find_package(PCL 1.7.1 REQUIRED)
+find_package(JetsonGPIO)
 
 # Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
@@ -29,7 +30,7 @@ add_definitions(${PCL_DEFINITIONS})
 # Tell CMake we are creating an executable with those files
 add_executable(find_objects main.cpp)
 # And link this executable with the required libraries for AutonomousSensorHead
-target_link_libraries(find_objects ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(find_objects ${PCL_LIBRARIES} ${catkin_LIBRARIES} JetsonGPIO::JetsonGPIO)
 # Add msg dependency
 add_dependencies(${PROJECT_NAME} omega_msgs_generate_messages_cpp)
 

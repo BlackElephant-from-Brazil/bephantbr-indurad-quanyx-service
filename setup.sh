@@ -40,12 +40,21 @@ apt update -y
 apt install cmake -y
 echo "FINISH: Setup catkin to 3.11"
 
+# Installing JetsonGPIO
+echo "BEGIN: Installing JetsonGPIO"
+cd /opt/
+git clone https://github.com/pjueon/JetsonGPIO
+cd JetsonGPIO
+mkdir build && cd build
+cmake ..
+make install
+echo "FINISH: Installing JetsonGPIO"
+
 # Configurating environment
 echo "BEGIN: Configurating environment"
-chown -R $USER ~/.ros
 apt-get install python-rosdep python-catkin-tools python-rospkg -y
-mkdir -p /home/cmak/catkin_ws/src
-cd /home/cmak/catkin_ws
+mkdir -p /opt/catkin_ws/src
+cd /opt/catkin_ws
 catkin init
 cd src
 cp -r /usr/bephantbr-indurad-quanyx-service/ROS/* .
@@ -67,36 +76,28 @@ git config --global user.name "Guilherme Sartori"
 git config --global user.email "gui.sartori96@gmail.com"
 echo "FINISH: Set git configuration"
 
-# Create updater boot
-echo "BEGIN: Create updater boot"
+# Copy all services
+echo "BEGIN: Copy all services"
 cd /usr/bephantbr-indurad-quanyx-service
 cp ./updater.service /etc/systemd/system
-systemctl enable updater.service
-echo "FINISH: Create updater boot"
-
-# Create configuration boot on ubuntu
-echo "BEGIN: Create configuration boot on ubuntu"
-cd /usr/bephantbr-indurad-quanyx-service
 cp ./configuration-boot.service /etc/systemd/system
-echo "FINISH: Create configuration boot on ubuntu"
-
-# Create startup boot on ubuntu
-echo "BEGIN: Create startup boot on ubuntu"
-cd /usr/bephantbr-indurad-quanyx-service
 cp ./startup-boot.service /etc/systemd/system
-systemctl enable startup-boot.service
+cp ./start-find-objects-ros.service /etc/systemd/system
+cp ./change-to-ros-process.service /etc/systemd/system
+cp ./change-to-service-process.service /etc/systemd/system
+echo "FINISH: Copy all services"
+
+# Configure startup
+echo "BEGIN: Configure startup"
+systemctl daemon-reload
+systemctl enable updater.service
 echo "FINISH: Create startup boot on ubuntu"
 
-# Create the data sender startup configuration
-echo "BEGIN: Create the find objects ros"
-cd /usr/bephantbr-indurad-quanyx-service
-cp ./start-find-objects-ros.service /etc/systemd/system
-echo "FINISH: Create the find objects ros"
-
-# Reload SystemCTL daemon
-echo "BEGIN: Reload SystemCTL daemon"
-systemctl daemon-reload
-echo "FINISH: Reload SystemCTL daemon"
+# Allow any changes in project
+echo "BEGIN: Allow any changes in project"
+cd /usr
+chmod 777 -R bephantbr-indurad-quanyx-service
+echo "FINISH: Allow any changes in project"
 
 # Build module
 echo "BEGIN: Build module"
@@ -106,9 +107,3 @@ mkdir build && cd build
 cmake ../
 make
 echo "FINISH: Build module"
-
-# Allow any changes in project
-echo "BEGIN: Allow any changes in project"
-cd /usr
-chmod 777 -R bephantbr-indurad-quanyx-service
-echo "FINISH: Allow any changes in project"

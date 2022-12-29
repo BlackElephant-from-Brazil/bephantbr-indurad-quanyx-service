@@ -8,39 +8,32 @@
 #include "ImageProcessing.h"
 #include "IOManager.h"
 
-#include <JetsonGPIO.h>
-
-#include <JetsonGPIO.h>
 
 /********************************************************************************
  *  INIT / EXIT
  ********************************************************************************/
 
 SensorControlThread::SensorControlThread(std::string hostname, bool verbose)
-    : _hostname(hostname), _head(Q_NULLPTR), _leaving(false), _rgbRight(NULL), _rightRectified(NULL), _leftRectified(NULL), _rgbDisp(NULL), _rightWidth(0), _rightHeight(0), _rightWidthRectified(0), _rightHeightRectified(0), _leftWidthRectified(0), _leftHeightRectified(0), _dispWidth(0), _dispHeight(0), _displayRightRaw(true), _displayLeftRaw(false), _displayDisp(true), _displayRightRect(true), _displayLeftRect(false), _verbose(verbose), _rightLut(NULL), _leftLut(NULL)
+    : _hostname(hostname), _head(Q_NULLPTR), _leaving(false), _rgbRight(NULL), _rightRectified(NULL), _leftRectified(NULL), _rgbDisp(NULL), _rightWidth(0), _rightHeight(0), _rightWidthRectified(0), _rightHeightRectified(0), _leftWidthRectified(0), _leftHeightRectified(0), _dispWidth(0), _dispHeight(0), _displayRightRaw(true), _displayLeftRaw(false), _displayDisp(true), _displayRightRect(false), _displayLeftRect(false), _verbose(verbose), _rightLut(NULL), _leftLut(NULL)
 {
 }
 
 SensorControlThread::~SensorControlThread()
 {
     /* Free allocated buffers */
-    if (_rgbDisp)
-    {
+    if (_rgbDisp) {
         free(_rgbDisp);
-        _rgbDisp = NULL;
+        _rgbDisp =  NULL;
     }
-    if (_rightRectified)
-    {
+    if (_rightRectified) {
         free(_rightRectified);
         _rightRectified = NULL;
     }
-    if (_leftRectified)
-    {
+    if (_leftRectified) {
         free(_leftRectified);
         _leftRectified = NULL;
     }
-    if (_rgbRight)
-    {
+    if (_rgbRight) {
         free(_rgbRight);
         _rgbRight = NULL;
     }
@@ -52,23 +45,19 @@ bool SensorControlThread::init()
     IDeviceManager manager;
 
     /* Detect sensor using manager class */
-    if (!_hostname.empty())
+    if(!_hostname.empty())
     {
         shared_ptr<IDevice> head = manager.detectDevice(_hostname);
-        if (!head)
-        {
+        if (!head) {
             vector<shared_ptr<IDevice>> heads = manager.detectDevices();
-            for (shared_ptr<IDevice> head : heads)
-            {
+            for (shared_ptr<IDevice> head: heads) {
                 string sensorName = head->getDeviceInformation()->getName();
-                if (!sensorName.empty() && sensorName == _hostname)
-                {
+                if (!sensorName.empty() && sensorName == _hostname) {
                     _head = head;
                     break;
                 }
             }
-            if (!_head)
-            {
+            if (!_head) {
                 qCritical() << "Can't find head " << _hostname.c_str() << endl;
                 return false;
             }
@@ -82,19 +71,15 @@ bool SensorControlThread::init()
     // Check if display options doesn't match head configuration.
     std::string streamMode = _head->getModeOfStreaming();
     cout << "streamMode: " << streamMode << endl;
-    if (streamMode.compare("camera_raw_left_right") == 0)
-    {
-        if (_displayDisp)
-        {
+    if (streamMode.compare("camera_raw_left_right") == 0) {
+        if (_displayDisp) {
             cerr << "The head can not stream the disparity map. Please change the streaming mode." << endl;
             return false;
         }
     }
 
-    if (streamMode.compare("camera_raw_right_disp") == 0)
-    {
-        if (_displayLeftRaw || _displayLeftRect)
-        {
+    if (streamMode.compare("camera_raw_right_disp") == 0) {
+        if (_displayLeftRaw || _displayLeftRect) {
             cerr << "The head can not stream the left image. Please change the streaming mode." << endl;
             return false;
         }
@@ -107,6 +92,7 @@ bool SensorControlThread::init()
     /* Retrieve size of frames */
     _rightWidth = _head->getCameraParameters()->getNumberOfColumns();
     _rightHeight = _head->getCameraParameters()->getNumberOfRows();
+
 
     _leftWidth = _head->getCameraParameters()->getNumberOfColumns();
     _leftHeight = _head->getCameraParameters()->getNumberOfRows();
@@ -147,16 +133,16 @@ bool SensorControlThread::init()
      * is computed (debayering) also for right rectified image.
      */
     /* Alloc buffer for the debayering result made in ImageProcessing */
-    _rgbRight = (unsigned char *)malloc(raw_buffer_size_factor * _rightWidth * _rightHeight);
+    _rgbRight = (unsigned char *) malloc(raw_buffer_size_factor * _rightWidth * _rightHeight);
 
     /* Alloc buffer for right rectified image */
-    _rightRectified = (unsigned char *)malloc(raw_buffer_size_factor * _rightWidthRectified * _rightHeightRectified);
+    _rightRectified = (unsigned char *) malloc(raw_buffer_size_factor * _rightWidthRectified * _rightHeightRectified);
 
     /* Alloc buffer for left rectified image */
-    _leftRectified = (unsigned char *)malloc(raw_buffer_size_factor * _leftWidthRectified * _leftHeightRectified);
+    _leftRectified = (unsigned char *) malloc(raw_buffer_size_factor * _leftWidthRectified * _leftHeightRectified);
 
     /* Disparity map is colored, let's allocated a buffer containing colored data */
-    _rgbDisp = (unsigned char *)malloc(3 * _dispWidth * _dispHeight);
+    _rgbDisp = (unsigned char *) malloc(3 * _dispWidth * _dispHeight);
 
     /* Note that is the disparity map format provided by THIS CLASS,
      * not the one got from library which is a uint8 one-component format. */
@@ -174,35 +160,10 @@ void SensorControlThread::stop()
 
 void SensorControlThread::unrefFrame()
 {
-    if (!_currentDisplayedFrames.isEmpty())
-    {
-        // qDebug() << "Dropping one frame from the queue of size: " << _currentDisplayedFrames.size();
+    if(!_currentDisplayedFrames.isEmpty()) {
+        //qDebug() << "Dropping one frame from the queue of size: " << _currentDisplayedFrames.size();
         _currentDisplayedFrames.dequeue();
     }
-}
-
-void SensorControlThread::alertNoFrameDetected()
-{
-    int no_frame_detected = 17;
-
-    GPIO::setmode(GPIO::BCM);
-    GPIO::setup(no_frame_detected, GPIO::OUT, 1);
-
-    GPIO::output(no_frame_detected, 1);
-
-    GPIO::cleanup();
-}
-
-void SensorControlThread::clearNoFrameDetected()
-{
-    int no_frame_detected = 17;
-
-    GPIO::setmode(GPIO::BCM);
-    GPIO::setup(no_frame_detected, GPIO::OUT, 0);
-
-    GPIO::output(no_frame_detected, 0);
-
-    GPIO::cleanup();
 }
 
 /********************************************************************************
@@ -215,8 +176,7 @@ void SensorControlThread::run()
 
     /* Detect head and initialize class members */
     bool initOk = init();
-    if (!initOk)
-    {
+    if (!initOk) {
         /* Quit application on error */
         Q_EMIT noMoreFrame();
         return;
@@ -230,8 +190,7 @@ void SensorControlThread::run()
 
     /* Start */
     _head->startImageAcquisition();
-    if (!_head->isImageAcquisitionStarted())
-    {
+    if (!_head->isImageAcquisitionStarted()) {
         qWarning() << "Error while starting streaming ! " << endl;
     }
 
@@ -240,36 +199,33 @@ void SensorControlThread::run()
     int encounter_frame = 0;
     _current_fps = 0;
 
-    while (!leaving)
-    {
+    while (!leaving) {
         IOManager::clearNoFrameDetected();
+
         /* Get a frame and transmit it to Viewer */
         shared_ptr<IData> frame = _head->blockingRead();
 
-        if (!frame)
-        {
-            std::cout << "hmmmm...." << std::endl;
+        if (!frame){
             IOManager::alertNoFrameDetected();
+            std::cout << "Nenhum frame recebido. Continuando..." << std::endl;
             continue;
         }
-        else if (!frame->isValid())
-        {
-            qDebug() << "No valid frame received. Stopping..." << endl;
+        else if(!frame->isValid()) {
+            qDebug() <<  "No valid frame received. Stopping..." << endl;
             stop();
             Q_EMIT noMoreFrame();
         }
-        else
+        else {
+
+        encounter_frame++;
+        std::time_t time_now = std::time(0) - time_begin;
+
+        if (time_now - tick >= 1)
         {
-
-            encounter_frame++;
-            std::time_t time_now = std::time(0) - time_begin;
-
-            if (time_now - tick >= 1)
-            {
-                tick++;
-                _current_fps = encounter_frame;
-                encounter_frame = 0;
-            }
+            tick++;
+            _current_fps = encounter_frame;
+            encounter_frame = 0;
+        }
             processFrame(frame);
         }
 
@@ -281,6 +237,7 @@ void SensorControlThread::run()
 
     /* Stop */
     _head->stopImageAcquisition();
+
 }
 
 /********************************************************************************
@@ -294,21 +251,18 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
     const unsigned char *rightRect = NULL;
     const unsigned char *leftRect = NULL;
 
-    if (frame->isValid())
-    {
+    if(frame->isValid()) {
 
         /* Handle right raw */
-        if (_displayRightRaw || _displayRightRect)
-        {
-
+        if (_displayRightRaw || _displayRightRect) {
+            // std::cout << "handle right raw" << frame->getRightImageData() << std::endl;
             /* Use directly buffer returned by library (Gray8 and I420)*/
             // NTV I420 has already been converted in RGB format by the library
             right = frame->getRightImageData();
         }
 
         /* Handle left raw */
-        if (_displayLeftRaw || _displayLeftRect)
-        {
+        if (_displayLeftRaw || _displayLeftRect) {
 
             /* Use directly buffer returned by library (Gray8 and I420)*/
             // NTV I420 has already been converted in RGB format by the library
@@ -316,13 +270,10 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
         }
 
         /* Handle right rectified image */
-        if (_displayRightRect)
-        {
+        if (_displayRightRect) {
 
             /* Color sensor */
-            if (_rightFormat == QImage::Format_RGB888)
-            {
-
+            if (_rightFormat == QImage::Format_RGB888) {
                 /* Build a rectified rgb image from the calibration lut and the RGB image */
                 ImageProcessing::getRectifyImgRgb(_rightRectified,
                                                   _rightWidthRectified,
@@ -330,29 +281,24 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
                                                   _rightLut,
                                                   right,
                                                   _rightWidth);
-            }
-            else
-            {
-
+            } else {
                 /* Build a rectified grey level image from the calibration lut and the grey level image*/
                 ImageProcessing::getRectifyImg(_rightRectified,
-                                               _rightWidthRectified,
-                                               _rightHeightRectified,
-                                               _rightLut,
-                                               right,
-                                               _rightWidth);
+                                            _rightWidthRectified,
+                                            _rightHeightRectified,
+                                            _rightLut,
+                                            right,
+                                            _rightWidth);
             }
 
             rightRect = _rightRectified;
         }
 
         /* Handle left rectified image */
-        if (_displayLeftRect)
-        {
+        if (_displayLeftRect) {
 
             /* Color sensor */
-            if (_leftFormat == QImage::Format_RGB888)
-            {
+            if (_leftFormat == QImage::Format_RGB888) {
 
                 /* Build a rectified rgb image from the calibration lut and the RGB image */
                 ImageProcessing::getRectifyImgRgb(_leftRectified,
@@ -361,17 +307,15 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
                                                   _leftLut,
                                                   left,
                                                   _leftWidth);
-            }
-            else
-            {
+            } else {
 
                 /* Build a rectified grey level image from the calibration lut and the grey level image*/
                 ImageProcessing::getRectifyImg(_leftRectified,
-                                               _leftWidthRectified,
-                                               _leftHeightRectified,
-                                               _leftLut,
-                                               left,
-                                               _leftWidth);
+                                            _leftWidthRectified,
+                                            _leftHeightRectified,
+                                            _leftLut,
+                                            left,
+                                            _leftWidth);
             }
 
             leftRect = _leftRectified;
@@ -394,25 +338,21 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
         }
 
         /* Handle disparity map */
-        if (_displayDisp)
-        {
-            if (strcmp(frame->getStreamingDispFormat(), "GRAY16") == 0)
-            {
+        if (_displayDisp) {
+            if (strcmp(frame->getStreamingDispFormat(), "GRAY16") == 0) {
 
                 /* Build a disparity rgb image from the color lut and the GRAY16 disparity data */
                 ImageProcessing::convertGray162RGB(frame->getDisparityData(),
                                                    _rgbDisp,
                                                    frame->getWidthDisparityData(),
                                                    frame->getHeightDisparityData());
-            }
-            else
-            {
+            } else {
 
                 /* Build a disparity rgb image from the color lut and the GRAY8 disparity data */
                 ImageProcessing::convertGray82RGB(frame->getDisparityData(),
-                                                  _rgbDisp,
-                                                  frame->getWidthDisparityData(),
-                                                  frame->getHeightDisparityData());
+                                                 _rgbDisp,
+                                                 frame->getWidthDisparityData(),
+                                                 frame->getHeightDisparityData());
             }
 
             disp = _rgbDisp;
@@ -424,15 +364,13 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
                          disp, _dispWidth, _dispHeight, _dispFormat,
                          rightRect, _rightWidthRectified, _rightHeightRectified, _rightFormat,
                          leftRect, _leftWidthRectified, _leftHeightRectified, _leftFormat);
+
     }
 
-    if (_verbose)
-    {
-        cout << endl
-             << "================ Begin Frame Metadata ================" << endl;
-        cout << "Is valid: " << (frame->isValid() ? "yes" : "no") << endl;
-        if (frame->isValid())
-        {
+    if(_verbose) {
+        cout << endl << "================ Begin Frame Metadata ================" << endl;
+        cout << "Is valid: " << (frame->isValid()?"yes":"no") << endl;
+        if(frame->isValid()) {
             struct timespec triggerTimestamp, beforePushTimestamp;
             triggerTimestamp = frame->getSHAcquisitionTimestamp();
             beforePushTimestamp = frame->getSHDataOutTimestamp();
@@ -445,12 +383,13 @@ void SensorControlThread::processFrame(shared_ptr<IData> frame)
             cout << "Height disparity image:\t" << frame->getHeightDisparityData() << endl;
             cout << "Streaming Disp Format:\t" << frame->getStreamingDispFormat() << endl;
             cout << "Timestamp trigger (sec):\t" << triggerTimestamp.tv_sec << "."
-                 << setfill('0') << setw(9) << triggerTimestamp.tv_nsec << endl;
+                << setfill('0') << setw(9) << triggerTimestamp.tv_nsec << endl;
             cout << "Timestamp before pushed (sec):\t" << beforePushTimestamp.tv_sec << "."
-                 << setfill('0') << setw(9) << beforePushTimestamp.tv_nsec << endl;
+                << setfill('0') << setw(9) << beforePushTimestamp.tv_nsec << endl;
             cout << "Analog gain applied:\t" << frame->getAnalogGain() << endl;
             cout << "Exposure time (µs):\t" << frame->getExposureTimeUs() << endl;
         }
         cout << "================= End Frame Metadata =================" << endl;
     }
+
 }

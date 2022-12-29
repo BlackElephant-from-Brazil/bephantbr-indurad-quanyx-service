@@ -8,16 +8,19 @@ using namespace GPIO;
 void IOManager::config()
 {
     cout << "STARTING GPIO" << endl;
+    cleanup();
     setmode(BCM);
 
-    setup(led_no_sensors_found, OUT, LOW);
-    setup(led_no_frames_detected, OUT, LOW);
+    setup(IOManager::led_no_sensors_found, OUT, LOW);
+    setup(IOManager::led_no_frames_detected, OUT, LOW);
 
-    setup(button_reconfigure_network, IN);
-    setup(button_reload_service, IN);
+    setup(IOManager::button_reconfigure_network, IN);
+    setup(IOManager::button_reload_service, IN);
+    setup(IOManager::button_change_to_ros, IN);
 
-    add_event_detect(button_reconfigure_network, GPIO::Edge::RISING, configureNetwork, 10);
-    add_event_detect(button_reload_service, GPIO::Edge::RISING, reloadService, 10);
+    add_event_detect(IOManager::button_reconfigure_network, GPIO::Edge::RISING, IOManager::configureNetwork, 10);
+    add_event_detect(IOManager::button_reload_service, GPIO::Edge::RISING, IOManager::reloadService, 10);
+    add_event_detect(IOManager::button_change_to_ros, GPIO::Edge::RISING, IOManager::changeToRos, 10);
 }
 
 void IOManager::configureNetwork()
@@ -33,22 +36,28 @@ void IOManager::reloadService()
     system("systemctl reload-or-restart startup-boot.service");
 }
 
+void IOManager::changeToRos()
+{
+    cout << "changing to ROS" << endl;
+    system("systemctl start change-to-ros-process.service");
+}
+
 void IOManager::alertNoSensorsFound()
 {
-    output(led_no_sensors_found, HIGH);
+    output(IOManager::led_no_sensors_found, HIGH);
 }
 
 void IOManager::clearNoSensorsFound()
 {
-    output(led_no_sensors_found, LOW);
+    output(IOManager::led_no_sensors_found, LOW);
 }
 
 void IOManager::alertNoFrameDetected()
 {
-    output(led_no_frames_detected, HIGH);
+    output(IOManager::led_no_frames_detected, HIGH);
 }
 
 void IOManager::clearNoFrameDetected()
 {
-    output(led_no_frames_detected, LOW);
+    output(IOManager::led_no_frames_detected, LOW);
 }

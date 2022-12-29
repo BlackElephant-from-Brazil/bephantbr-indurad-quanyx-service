@@ -31,6 +31,10 @@ public:
            bool verbose, 
            std::string _displayVideoName, cv::VideoWriter _displayVideoWriter,
            std::string _disparityVideoName, cv::VideoWriter _disparityVideoWriter);
+    // Viewer(std::string hostname, int& argc, char** argv,
+    //        bool verbose, 
+    //        std::string _displayVideoName,
+    //        std::string _disparityVideoName);
 
     ~Viewer();
 

@@ -22,7 +22,6 @@
 #include <IDevice.h>
 #include <IDeviceManager.h>
 
-#include <JetsonGPIO.h>
 
 using namespace std;
 
@@ -49,8 +48,10 @@ string findFirstASHCamera()
         else
         {
             cout << "no sensors found" << endl;
+            system("pkill avahi");
+            system("avahi-autoipd -D --force-bind --no-chroot eth0");
             IOManager::alertNoSensorsFound();
-            usleep(1 * microsecond);
+            usleep(5 * microsecond);
         }
     } while (heads.size() == 0);
     return sensorName;
@@ -104,6 +105,8 @@ int main(int argc, char *argv[])
     IOManager::config();
     deleteLastVideos();
     string hostname = findFirstASHCamera();
+    string cmd = "ASHConfig " + hostname + " -f 5 -b sgm_256x128";
+    system(cmd.c_str());
 
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
@@ -116,8 +119,8 @@ int main(int argc, char *argv[])
     int frameWidth = 828;
     int frameHeigth = 544;
 
-    cv::VideoWriter displayVideoWriter(displayVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth));
-    cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 20, cv::Size(frameWidth, frameHeigth), 1);
+    cv::VideoWriter displayVideoWriter(displayVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 5, cv::Size(frameWidth, frameHeigth));
+    cv::VideoWriter disparityVideoWriter(disparityVideoName, cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 5, cv::Size(frameWidth, frameHeigth), 1);
 
     /* Create and launch Viewer */
     Viewer viewer(hostname, argc, argv, _verbose, displayVideoName, displayVideoWriter, disparityVideoName, disparityVideoWriter);
